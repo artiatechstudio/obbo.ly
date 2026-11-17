@@ -56,12 +56,6 @@
     font-weight: 700; font-size: 20px; color: #fff;
     line-height: 1.2;
   }
-  .header-tag {
-    background: var(--navy);
-    color: #fff;
-    font-weight: 700; font-size: 14px;
-    padding: 7px 16px; border-radius: 999px;
-  }
 
   /* ===== الهيرو — كاروسيل صور كل 3 ثوان ===== */
   .hero {
@@ -89,7 +83,7 @@
     position: absolute; inset: 0; z-index: 2;
     display: flex; align-items: center; justify-content: center;
     text-align: center; padding: 0 20px;
-    font-size: clamp(56px, 12vw, 120px);
+    font-size: clamp(40px, 6.5vw, 76px);
     font-weight: 900; color: #fff;
     text-shadow: 0 6px 30px rgba(0,0,0,.65);
   }
@@ -250,11 +244,11 @@
     flex-wrap: wrap; gap: 16px;
   }
   .footer-nav { display: flex; align-items: center; gap: 0; font-weight: 700; }
-  .footer-nav span {
+  .footer-nav span, .footer-nav a {
     color: #1F2A44;
     font-size: 16px; padding: 0 4px;
   }
-  .footer-nav .dot { color: #9AA5B5; padding: 0 6px; }
+  .footer-nav a { text-decoration: underline; text-underline-offset: 4px; }
   .footer-powered { text-align: left; }
   .footer-powered p { font-size: 15px; color: #374151; }
   .footer-powered p strong { color: #1F2A44; font-weight: 700; }
@@ -287,7 +281,6 @@
       <img src="assets/logo.png" alt="OBBO — عبو">
       <span>عبو للخدمات اللوجستية</span>
     </div>
-    <div class="header-tag">قريباً — 1 يناير 2027</div>
   </div>
 </header>
 
@@ -364,9 +357,7 @@
   <div class="footer-inner">
     <div class="footer-top">
       <nav class="footer-nav">
-        <span>القانونيات</span><span class="dot">·</span>
-        <span>الاستوديو</span><span class="dot">·</span>
-        <span>الإدارة</span>
+        <a href="https://www.artiatech.ly/p/about-us.html" target="_blank" rel="noopener">الاستوديو</a>
       </nav>
       <div class="footer-powered">
         <p>يتم تشغيله عبر <strong>استوديو ارتياتك</strong></p>
