@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #0B1F3A;
@@ -20,7 +20,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: 'Cairo', sans-serif;
+    font-family: 'Amiri', serif;
     background: var(--navy);
     color: var(--white);
     overflow-x: hidden;
@@ -53,8 +53,8 @@
     display: block;
   }
   .header-brand span {
-    font-weight: 900; font-size: 26px; color: #fff;
-    letter-spacing: 1px; line-height: 1;
+    font-weight: 700; font-size: 20px; color: #fff;
+    line-height: 1.2;
   }
   .header-tag {
     background: var(--navy);
@@ -133,22 +133,84 @@
     flex-wrap: wrap; direction: ltr;
   }
   .unit { width: 132px; }
-  .flip {
-    perspective: 700px;
-    background: var(--navy);
-    border-radius: 16px;
-    overflow: hidden;
+  /* بطاقات سكور تنقلب — نمط split-flap */
+  .flip-card {
+    display: block;
+    position: relative;
+    padding-bottom: 0.72em;
+    font-size: 56px;
+    line-height: 0.95;
+    perspective: 400px;
+    margin: 0 auto;
+    width: 1.8em;
+    border-radius: 0.15em;
     box-shadow: 0 10px 30px rgba(11,31,58,.35);
   }
-  .flip-inner {
-    display: flex; align-items: center; justify-content: center;
-    height: 104px;
-    font-size: 58px; font-weight: 900; color: #fff;
-    font-variant-numeric: tabular-nums;
-    transition: transform .28s ease, opacity .28s ease;
-    transform-origin: center;
+  .flip-card .card__top,
+  .flip-card .card__bottom,
+  .flip-card .card__back::before,
+  .flip-card .card__back::after {
+    display: block;
+    height: 0.72em;
+    color: #fff;
+    background: #0B1F3A;
+    padding: 0.25em 0.25em;
+    border-radius: 0.15em 0.15em 0 0;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    width: 1.8em;
+    transform: translateZ(0);
   }
-  .flip-inner.flipping { transform: rotateX(88deg); opacity: .15; }
+  .flip-card .card__bottom {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    border-top: solid 1px rgba(255,255,255,.25);
+    background: #12294D;
+    border-radius: 0 0 0.15em 0.15em;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .flip-card .card__bottom::after {
+    display: block;
+    margin-top: -0.72em;
+  }
+  .flip-card .card__back::before,
+  .flip-card .card__bottom::after {
+    content: attr(data-value);
+  }
+  .flip-card .card__back {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 0;
+    pointer-events: none;
+  }
+  .flip-card .card__back::before {
+    position: relative;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .flip-card.flip .card__back::before {
+    animation: flipTop 0.3s cubic-bezier(.37,.01,.94,.35);
+    animation-fill-mode: both;
+    transform-origin: center bottom;
+  }
+  .flip-card.flip .card__back .card__bottom {
+    transform-origin: center top;
+    animation-fill-mode: both;
+    animation: flipBottom 0.6s cubic-bezier(.15,.45,.28,1);
+  }
+  @keyframes flipTop {
+    0% { transform: rotateX(0deg); z-index: 2; }
+    0%, 99% { opacity: 0.99; }
+    100% { transform: rotateX(-90deg); opacity: 0; }
+  }
+  @keyframes flipBottom {
+    0%, 50% { z-index: -1; transform: rotateX(90deg); opacity: 0; }
+    51% { opacity: 0.99; }
+    100% { opacity: 0.99; transform: rotateX(0deg); z-index: 5; }
+  }
   .unit-label {
     margin-top: 12px;
     font-size: 17px; font-weight: 800; color: var(--navy);
@@ -210,7 +272,7 @@
 
   @media (max-width: 640px) {
     .unit { width: 74px; }
-    .flip-inner { height: 66px; font-size: 34px; }
+    .flip-card { font-size: 34px; }
     .footer-top { flex-direction: column; }
     .footer-powered { text-align: right; }
   }
@@ -223,7 +285,7 @@
   <div class="header-inner">
     <div class="header-brand">
       <img src="assets/logo.png" alt="OBBO — عبو">
-      <span>OBBO</span>
+      <span>عبو للخدمات اللوجستية</span>
     </div>
     <div class="header-tag">قريباً — 1 يناير 2027</div>
   </div>
@@ -232,9 +294,9 @@
 <!-- الهيرو: كاروسيل — كلمة واحدة على كل صورة كل 3 ثوان -->
 <section class="hero" id="hero">
   <div class="slide active"><img src="assets/hero-truck.png" alt="شاحنات عبو على الطريق الصحراوي"><div class="word">سجل في عبو</div></div>
-  <div class="slide"><img src="assets/carousel-highway.png" alt="قافلة شاحنات على الطريق الصحراوي"><div class="word">سرعة</div></div>
-  <div class="slide"><img src="assets/carousel-loading.png" alt="تحميل بضائع في المستودع"><div class="word">عبي</div></div>
-  <div class="slide"><img src="assets/carousel-driver.png" alt="سائق أمام شاحنته"><div class="word">ثقة</div></div>
+  <div class="slide"><img src="assets/carousel-highway.jpg" alt="قافلة شاحنات على الطريق الصحراوي"><div class="word">سرعة</div></div>
+  <div class="slide"><img src="assets/carousel-loading.jpg" alt="تحميل بضائع في المستودع"><div class="word">عبي</div></div>
+  <div class="slide"><img src="assets/carousel-driver.jpg" alt="سائق أمام شاحنته"><div class="word">ثقة</div></div>
   <div class="slide"><img src="assets/carousel-hub.png" alt="مركز لوجستي عند الفجر"><div class="word">اطلب</div></div>
 </section>
 
@@ -253,19 +315,35 @@
 
   <div class="countdown">
     <div class="unit">
-      <div class="flip"><div class="flip-inner" id="cd-days">00</div></div>
+      <div class="flip-card" id="card-days">
+        <b class="card__top">00</b>
+        <b class="card__bottom" data-value="00"></b>
+        <b class="card__back" data-value="00"><b class="card__bottom" data-value="00"></b></b>
+      </div>
       <div class="unit-label">يوم</div>
     </div>
     <div class="unit">
-      <div class="flip"><div class="flip-inner" id="cd-hours">00</div></div>
+      <div class="flip-card" id="card-hours">
+        <b class="card__top">00</b>
+        <b class="card__bottom" data-value="00"></b>
+        <b class="card__back" data-value="00"><b class="card__bottom" data-value="00"></b></b>
+      </div>
       <div class="unit-label">ساعة</div>
     </div>
     <div class="unit">
-      <div class="flip"><div class="flip-inner" id="cd-mins">00</div></div>
+      <div class="flip-card" id="card-mins">
+        <b class="card__top">00</b>
+        <b class="card__bottom" data-value="00"></b>
+        <b class="card__back" data-value="00"><b class="card__bottom" data-value="00"></b></b>
+      </div>
       <div class="unit-label">دقيقة</div>
     </div>
     <div class="unit">
-      <div class="flip"><div class="flip-inner" id="cd-secs">00</div></div>
+      <div class="flip-card" id="card-secs">
+        <b class="card__top">00</b>
+        <b class="card__bottom" data-value="00"></b>
+        <b class="card__back" data-value="00"><b class="card__bottom" data-value="00"></b></b>
+      </div>
       <div class="unit-label">ثانية</div>
     </div>
   </div>
@@ -341,40 +419,46 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // ---------- العد التنازلي ببطاقات تنقلب ----------
-  const el = {
-    days: document.getElementById('cd-days'),
-    hours: document.getElementById('cd-hours'),
-    mins: document.getElementById('cd-mins'),
-    secs: document.getElementById('cd-secs'),
-  };
-  const pad = n => String(n).padStart(2, '0');
-
-  function flipTo(node, value) {
-    if (node.textContent === value) return;
-    node.classList.add('flipping');
-    setTimeout(() => {
-      node.textContent = value;
-      node.classList.remove('flipping');
-    }, 280);
+  // ---------- العد التنازلي ببطاقات سكور تنقلب (نمط split-flap) ----------
+  function makeUnit(cardId) {
+    var card = document.getElementById(cardId);
+    var top = card.querySelector('.card__top');
+    var bottom = card.querySelector('.card__bottom');
+    var back = card.querySelector('.card__back');
+    var backBottom = card.querySelector('.card__back .card__bottom');
+    var current = null;
+    return function update(val) {
+      val = ('0' + val).slice(-2);
+      if (val !== current) {
+        if (current !== null) {
+          back.setAttribute('data-value', current);
+          bottom.setAttribute('data-value', current);
+        }
+        current = val;
+        top.innerText = current;
+        backBottom.setAttribute('data-value', current);
+        card.classList.remove('flip');
+        void card.offsetWidth;
+        card.classList.add('flip');
+      }
+    };
   }
+  var updateDays = makeUnit('card-days');
+  var updateHours = makeUnit('card-hours');
+  var updateMins = makeUnit('card-mins');
+  var updateSecs = makeUnit('card-secs');
 
   function tick() {
-    const diff = LAUNCH_DATE - new Date();
+    var diff = LAUNCH_DATE - new Date();
     if (diff <= 0) {
-      flipTo(el.days, '00'); flipTo(el.hours, '00');
-      flipTo(el.mins, '00'); flipTo(el.secs, '00');
+      updateDays(0); updateHours(0); updateMins(0); updateSecs(0);
       return;
     }
-    const totalSecs = Math.floor(diff / 1000);
-    const days = Math.floor(totalSecs / 86400);
-    const hours = Math.floor((totalSecs % 86400) / 3600);
-    const mins = Math.floor((totalSecs % 3600) / 60);
-    const secs = totalSecs % 60;
-    flipTo(el.days, pad(days));
-    flipTo(el.hours, pad(hours));
-    flipTo(el.mins, pad(mins));
-    flipTo(el.secs, pad(secs));
+    var totalSecs = Math.floor(diff / 1000);
+    updateDays(Math.floor(totalSecs / 86400));
+    updateHours(Math.floor((totalSecs % 86400) / 3600));
+    updateMins(Math.floor((totalSecs % 3600) / 60));
+    updateSecs(totalSecs % 60);
   }
   tick();
   setInterval(tick, 1000);
