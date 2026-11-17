@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBBO | عبو — قريباً</title>
+<meta name="description" content="عبو — منصة لوجستية ليبية تربط التجار بأصحاب الشاحنات. قريباً: 1 يناير 2027.">
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --orange: #FF7A00;
+    --white: #FFFFFF;
+    --grey: #F3F4F6;
+    --text: #111827;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ===== الهيدر البرتقالي — يظهر عند النزول وفوات صورة الهيرو ===== */
+  #siteHeader {
+    position: fixed;
+    top: 0; right: 0; left: 0;
+    z-index: 100;
+    background: var(--orange);
+    transform: translateY(-110%);
+    transition: transform .45s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,.35);
+  }
+  #siteHeader.visible { transform: translateY(0); }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-brand { display: flex; align-items: center; gap: 12px; }
+  .header-brand img {
+    height: 46px; width: 46px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    display: block;
+  }
+  .header-brand span {
+    font-weight: 900; font-size: 26px; color: #fff;
+    letter-spacing: 1px; line-height: 1;
+  }
+  .header-tag {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700; font-size: 14px;
+    padding: 7px 16px; border-radius: 999px;
+  }
+
+  /* ===== الهيرو — كاروسيل صور كل 3 ثوان ===== */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 560px;
+    overflow: hidden;
+  }
+  .hero .slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 1.1s ease;
+  }
+  .hero .slide.active { opacity: 1; }
+  .hero .slide img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(11,31,58,.88) 0%, rgba(11,31,58,.25) 45%, rgba(11,31,58,.15) 100%);
+  }
+  .hero .slide .word {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 0 20px;
+    font-size: clamp(56px, 12vw, 120px);
+    font-weight: 900; color: #fff;
+    text-shadow: 0 6px 30px rgba(0,0,0,.65);
+  }
+
+  /* ===== عبارة الشعار ===== */
+  .slogan {
+    background: var(--navy);
+    padding: 90px 20px;
+    text-align: right;
+  }
+  .slogan-inner { max-width: 1100px; margin: 0 auto; }
+  .slogan .kicker {
+    color: var(--orange); font-weight: 800; font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .slogan h2 {
+    font-size: clamp(30px, 5.5vw, 54px);
+    font-weight: 900; line-height: 1.5;
+  }
+  .slogan h2 .orange { color: var(--orange); }
+
+  /* ===== العد التنازلي ===== */
+  .countdown-section {
+    background: var(--white);
+    color: var(--navy);
+    padding: 80px 20px 90px;
+    text-align: center;
+  }
+  .countdown-section h2 {
+    font-family: 'Amiri', serif;
+    font-size: clamp(30px, 5vw, 48px);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .countdown-section .sub {
+    color: #4B5563; font-size: 17px; font-weight: 600;
+    margin-bottom: 44px;
+  }
+  .countdown {
+    display: flex; justify-content: center; gap: 18px;
+    flex-wrap: wrap; direction: ltr;
+  }
+  .unit { width: 132px; }
+  .flip {
+    perspective: 700px;
+    background: var(--navy);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(11,31,58,.35);
+  }
+  .flip-inner {
+    display: flex; align-items: center; justify-content: center;
+    height: 104px;
+    font-size: 58px; font-weight: 900; color: #fff;
+    font-variant-numeric: tabular-nums;
+    transition: transform .28s ease, opacity .28s ease;
+    transform-origin: center;
+  }
+  .flip-inner.flipping { transform: rotateX(88deg); opacity: .15; }
+  .unit-label {
+    margin-top: 12px;
+    font-size: 17px; font-weight: 800; color: var(--navy);
+  }
+
+  /* ===== شريط الإنجاز ===== */
+  .progress-wrap {
+    max-width: 720px; margin: 64px auto 0; text-align: right;
+  }
+  .progress-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .progress-head .title { font-size: 20px; font-weight: 800; color: var(--navy); }
+  .progress-head .value { font-size: 26px; font-weight: 900; color: var(--orange); }
+  .progress-track {
+    height: 18px; border-radius: 999px;
+    background: #E5E7EB; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--orange), #FF9A3D);
+    border-radius: 999px;
+    transition: width 1.2s ease;
+  }
+
+  /* ===== الفوتر — مستوحى من فوتر sajelni.artiatech.ly — روابط التواصل فقط ===== */
+  footer {
+    background: #fff;
+    color: #374151;
+    border-top: 1px solid #E8EDF3;
+    padding: 26px 20px 22px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-nav { display: flex; align-items: center; gap: 0; font-weight: 700; }
+  .footer-nav span {
+    color: #1F2A44;
+    font-size: 16px; padding: 0 4px;
+  }
+  .footer-nav .dot { color: #9AA5B5; padding: 0 6px; }
+  .footer-powered { text-align: left; }
+  .footer-powered p { font-size: 15px; color: #374151; }
+  .footer-powered p strong { color: #1F2A44; font-weight: 700; }
+  .footer-social {
+    display: flex; gap: 16px; margin-top: 10px;
+  }
+  .footer-social a { display: inline-flex; color: #6B7A90; }
+  .footer-social a:hover { color: var(--orange); }
+  .footer-social svg { width: 22px; height: 22px; }
+  .footer-divider { border: none; border-top: 1px solid #E8EDF3; margin: 20px 0 16px; }
+  .footer-copy {
+    text-align: center;
+    color: #8A96A8; font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .unit { width: 74px; }
+    .flip-inner { height: 66px; font-size: 34px; }
+    .footer-top { flex-direction: column; }
+    .footer-powered { text-align: right; }
+  }
+</style>
+</head>
+<body>
+
+<!-- الهيدر البرتقالي: يظهر بعد النزول وفوات صورة الهيرو -->
+<header id="siteHeader">
+  <div class="header-inner">
+    <div class="header-brand">
+      <img src="assets/logo.png" alt="OBBO — عبو">
+      <span>OBBO</span>
+    </div>
+    <div class="header-tag">قريباً — 1 يناير 2027</div>
+  </div>
+</header>
+
+<!-- الهيرو: كاروسيل — كلمة واحدة على كل صورة كل 3 ثوان -->
+<section class="hero" id="hero">
+  <div class="slide active"><img src="assets/hero-truck.png" alt="شاحنات عبو على الطريق الصحراوي"><div class="word">سجل في عبو</div></div>
+  <div class="slide"><img src="assets/carousel-highway.png" alt="قافلة شاحنات على الطريق الصحراوي"><div class="word">سرعة</div></div>
+  <div class="slide"><img src="assets/carousel-loading.png" alt="تحميل بضائع في المستودع"><div class="word">عبي</div></div>
+  <div class="slide"><img src="assets/carousel-driver.png" alt="سائق أمام شاحنته"><div class="word">ثقة</div></div>
+  <div class="slide"><img src="assets/carousel-hub.png" alt="مركز لوجستي عند الفجر"><div class="word">اطلب</div></div>
+</section>
+
+<!-- عبارة الشعار -->
+<section class="slogan">
+  <div class="slogan-inner">
+    <div class="kicker">قريباً..</div>
+    <h2>عبي عبوتك وانت ماشي<br><span class="orange">وعبي وانت جاي</span></h2>
+  </div>
+</section>
+
+<!-- العد التنازلي + الإنجاز -->
+<section class="countdown-section">
+  <h2>الوقت المتوقع حتى الإطلاق</h2>
+  <p class="sub">1 يناير 2027 — الساعة 7:00 صباحاً بتوقيت ليبيا</p>
+
+  <div class="countdown">
+    <div class="unit">
+      <div class="flip"><div class="flip-inner" id="cd-days">00</div></div>
+      <div class="unit-label">يوم</div>
+    </div>
+    <div class="unit">
+      <div class="flip"><div class="flip-inner" id="cd-hours">00</div></div>
+      <div class="unit-label">ساعة</div>
+    </div>
+    <div class="unit">
+      <div class="flip"><div class="flip-inner" id="cd-mins">00</div></div>
+      <div class="unit-label">دقيقة</div>
+    </div>
+    <div class="unit">
+      <div class="flip"><div class="flip-inner" id="cd-secs">00</div></div>
+      <div class="unit-label">ثانية</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-head">
+      <span class="title">مدى الإنجاز</span>
+      <span class="value" id="progressValue">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+</section>
+
+<!-- الفوتر — مستوحى من فوتر sajelni.artiatech.ly — روابط التواصل فقط -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <nav class="footer-nav">
+        <span>القانونيات</span><span class="dot">·</span>
+        <span>الاستوديو</span><span class="dot">·</span>
+        <span>الإدارة</span>
+      </nav>
+      <div class="footer-powered">
+        <p>يتم تشغيله عبر <strong>استوديو ارتياتك</strong></p>
+        <div class="footer-social">
+          <a href="https://artiatech.ly" aria-label="موقع استوديو آرتياتك" title="موقع استوديو آرتياتك">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.9 5.7 3.9 9S14.5 18.4 12 21c-2.5-2.6-3.9-5.7-3.9-9S9.5 5.6 12 3z"/></svg>
+          </a>
+          <a href="https://youtube.com/@artiatechstudio" aria-label="يوتيوب استوديو آرتياتك" title="يوتيوب استوديو آرتياتك">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="M10.5 9.8v4.4l4-2.2-4-2.2z" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://instagram.com/artiatechstudio" aria-label="إنستغرام استوديو آرتياتك" title="إنستغرام استوديو آرتياتك">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://facebook.com/artiatechstudio" aria-label="فيسبوك استوديو آرتياتك" title="فيسبوك استوديو آرتياتك">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 8h2.5V4.5H14A4.5 4.5 0 0 0 9.5 9v2.5H7V15h2.5v6H13v-6h2.6l.4-3.5h-3V9c0-.6.4-1 1-1z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <p class="footer-copy">تطبيق عبو للخدمات اللوجستية — جميع الحقوق محفوظة © 2026</p>
+  </div>
+</footer>
+
+<script>
+  // ============================================================
+  //  نسبة الإنجاز — غيّر هذا الرقم فقط (من 0 إلى 100)
+  //  PROGRESS: change this number only (0 - 100)
+  // ============================================================
+  const PROGRESS = 7;
+
+  // موعد الإطلاق: 1 يناير 2027 — 7:00 صباحاً بتوقيت ليبيا
+  const LAUNCH_DATE = new Date('2027-01-01T07:00:00+02:00');
+
+  // ---------- الكاروسيل: تبديل الصورة كل 3 ثوان ----------
+  const slides = document.querySelectorAll('.hero .slide');
+  let currentSlide = 0;
+  setInterval(() => {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }, 3000);
+
+  // ---------- الهيدر البرتقالي: يظهر بعد فوات صورة الهيرو ----------
+  const header = document.getElementById('siteHeader');
+  const hero = document.getElementById('hero');
+  function onScroll() {
+    header.classList.toggle('visible', window.scrollY > hero.offsetHeight - 80);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ---------- العد التنازلي ببطاقات تنقلب ----------
+  const el = {
+    days: document.getElementById('cd-days'),
+    hours: document.getElementById('cd-hours'),
+    mins: document.getElementById('cd-mins'),
+    secs: document.getElementById('cd-secs'),
+  };
+  const pad = n => String(n).padStart(2, '0');
+
+  function flipTo(node, value) {
+    if (node.textContent === value) return;
+    node.classList.add('flipping');
+    setTimeout(() => {
+      node.textContent = value;
+      node.classList.remove('flipping');
+    }, 280);
+  }
+
+  function tick() {
+    const diff = LAUNCH_DATE - new Date();
+    if (diff <= 0) {
+      flipTo(el.days, '00'); flipTo(el.hours, '00');
+      flipTo(el.mins, '00'); flipTo(el.secs, '00');
+      return;
+    }
+    const totalSecs = Math.floor(diff / 1000);
+    const days = Math.floor(totalSecs / 86400);
+    const hours = Math.floor((totalSecs % 86400) / 3600);
+    const mins = Math.floor((totalSecs % 3600) / 60);
+    const secs = totalSecs % 60;
+    flipTo(el.days, pad(days));
+    flipTo(el.hours, pad(hours));
+    flipTo(el.mins, pad(mins));
+    flipTo(el.secs, pad(secs));
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---------- شريط الإنجاز ----------
+  document.getElementById('progressValue').textContent = PROGRESS + '%';
+  requestAnimationFrame(() => {
+    document.getElementById('progressFill').style.width = PROGRESS + '%';
+  });
+</script>
+</body>
+</html>
